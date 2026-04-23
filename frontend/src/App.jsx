@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-// --- קומפוננטת הטופס (דף הבית) ---
+// --- דף הטופס ---
 function FormPage() {
   const [formData, setFormData] = useState({ fullName: '', email: '' });
   const [loading, setLoading] = useState(false);
@@ -19,11 +19,11 @@ function FormPage() {
       });
       const data = await response.json();
       if (data.success) {
-        setMessage('הבקשה אושרה! בדוק את המייל שלך לאישור הרשמי.');
+        setMessage('הבקשה אושרה! האישור הרשמי נשלח למייל שלך.');
         setFormData({ fullName: '', email: '' });
       }
     } catch (error) {
-      setMessage('שגיאה בתקשורת עם השרת.');
+      setMessage('שגיאת תקשורת. ודא שהשרת ב-Render רץ.');
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ function FormPage() {
             <input type="text" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} required />
           </div>
           <div className="input-group">
-            <label>כתובת אימייל:</label>
+            <label>מייל למשלוח האישור:</label>
             <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
           </div>
           <button type="submit" className="submit-btn" disabled={loading}>{loading ? 'מעבד...' : 'הנפק אישור כניסה'}</button>
@@ -51,26 +51,20 @@ function FormPage() {
   );
 }
 
-// --- קומפוננטת המתיחה (דף האישור) ---
+// --- דף המתיחה ---
 function VideoPage() {
   return (
-    <div className="prank-container">
-      <div className="maccabi-overlay">
-        <h1>חחחח נראה לך?!</h1>
-        <h2>תל אביב צהובה! 💛💙</h2>
-        <div className="maccabi-colors"></div>
+    <div className="prank-container" style={{textAlign: 'center', padding: '50px', backgroundColor: '#00163f', color: '#ffcc00', height: '100vh'}}>
+      <h1>חחחח נראה לך?! 😂</h1>
+      <h2>תל אביב צהובה! 💛💙</h2>
+      <div style={{marginTop: '30px'}}>
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
       </div>
-      {/* כאן אפשר להוסיף וידאו מיוטיוב של קהל/שירים */}
-      <iframe 
-        width="0" height="0" 
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
-        frameBorder="0" allow="autoplay">
-      </iframe>
+      <h3 style={{marginTop: '20px'}}>יאללה מכבי!</h3>
     </div>
   );
 }
 
-// --- הקומפוננטה הראשית עם הניתוב ---
 export default function App() {
   return (
     <Router>
