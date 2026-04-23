@@ -23,8 +23,7 @@ app.post('/send-email', async (req, res) => {
 
     try {
         const data = await resend.emails.send({
-            from: 'Maccabi TLV <onboarding@resend.dev>',
-            to: email,
+from: 'עיריית תל אביב-יפו <visa@dormayor.com>',            to: email,
             subject: 'אישור כניסה רשמי לתל אביב - הונפק בהצלחה',
             html: `
                 <div dir="rtl" style="font-family: Arial, sans-serif; border: 4px solid #ffcc00; padding: 30px; text-align: center; background-color: #ffffff; max-width: 600px; margin: auto;">
