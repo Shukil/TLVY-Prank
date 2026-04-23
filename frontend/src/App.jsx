@@ -1,114 +1,168 @@
-const express = require('express');
-const cors = require('cors');
-const { Resend } = require('resend');
-require('dotenv').config();
+import React, { useState, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import './VideoPage.css';
 
-const app = express();
+function FormPage() {
+  const [formData, setFormData] = useState({ name: '', email: '' });
+  const [status, setStatus] = useState('idle');
 
-app.use(cors());
-app.use(express.json());
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// נתיב בדיקה לשרת
-app.get('/', (req, res) => {
-    res.status(200).send('<h1>Maccabi Server is UP and RUNNING! 💛💙</h1>');
-});
-
-// נתיב שליחת המייל
-app.post('/send-email', async (req, res) => {
-    // כאן השרת קולט את כל השדות מהטופס המעוצב שלך, כדי למנוע קריסות
-    const { fullName, email, reason, arrivalDate } = req.body;
-    
-    // הלוג עודכן כדי שתוכל לראות ב-Render את כל הפרטים שהוזנו
-    console.log(`ניסיון שליחת מייל ל- ${email} עבור ${fullName}. סיבת הגעה: ${reason}, תאריך: ${arrivalDate}`);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
 
     try {
-        const data = await resend.emails.send({
-            from: 'Maccabi TLV <onboarding@resend.dev>',
-            to: email,
-            subject: 'אישור כניסה רשמי לתל אביב - הונפק בהצלחה',
-            
-            // --- עיצוב המייל של שעה 22:00 - ללא שום שינוי! ---
-            html: `
-                <div dir="rtl" style="font-family: Arial, sans-serif; border: 4px solid #ffcc00; padding: 30px; text-align: center; background-color: #ffffff; max-width: 600px; margin: auto;">
-                    <img src="https://upload.wikimedia.org/wikipedia/he/thumb/a/a8/Maccabi_Tel_Aviv_FC.svg/1024px-Maccabi_Tel_Aviv_FC.svg.png" alt="Maccabi Logo" style="width: 100px; margin-bottom: 20px;">
-                    
-                    <h1 style="color: #00163f; font-size: 24px;">שלום ${fullName},</h1>
-                    
-                    <p style="font-size: 18px; color: #333;">אנו שמחים לבשר לך שבקשת אשרת הכניסה שלך לתל אביב אושרה במערכת.</p>
-                    <p style="font-weight: bold; font-size: 16px;">כדי להוריד את האישור הרשמי לטלפון, לחץ על הכפתור למטה:</p>
-                    <br />
-                    
-                    <a href="https://tlvy-prank.vercel.app/video-page" 
-                       style="background-color: #00163f; color: #ffcc00; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 18px; display: inline-block;">
-                       צפייה באישור הכניסה
-                    </a>
-                    
-                    <p style="margin-top: 40px; font-size: 12px; color: #888;">* האישור הונפק באופן ממוחשב ותקף ל-72 שעות.</p>
-                    <p style="font-size: 12px; color: #888;">© 2026 עיריית תל אביב-יפו | מחלקת אשרות</p>
-                </div>
-            `
-        });
+      const response = await fetch('https://tlvy-prank-1.onrender.com/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formData.name,
+          email: formData.email,
+        }),
+      });
 
-        console.log('המייל נשלח בהצלחה:', data);
-        res.status(200).json({ success: true, data });
-
+      if (response.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '' });
+      } else {
+        setStatus('error');
+      }
     } catch (error) {
-        console.error('שגיאה בשליחת המייל:', error);
-        res.status(500).json({ success: false, error: error.message });
+      console.error('Error submitting form:', error);
+      setStatus('error');
     }
-});
+  };
 
-const PORT = process.env.PORT || 5000;
+  return (
+    <div className="main-wrapper" dir="rtl">
+      <div className="container">
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is jumping on port ${PORT} 🚀`);
-});
+        <img src="/maccabi.png" alt="Maccabi" className="header-logo" />
+        <h1>הנפקת אשרת כניסה לתל אביב</h1>
+        <p className="subtitle">מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
 
-// --- 2. דף המתיחה (מותאם לעיצוב הקריוקי החדש!) ---
+        {status === 'success' ? (
+          <div className="success-message">
+            <div className="success-header">
+              <span className="check-icon">✓</span>
+              <h3>הבקשה התקבלה בהצלחה!</h3>
+            </div>
+            <p className="success-text">אישור יישלח אליך למייל בקרוב.</p>
+            <button onClick={() => setStatus('idle')}>שלח בקשה נוספת</button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="form-container">
+
+            <div className="input-group">
+              <label>שם מלא:</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+                placeholder="הכנס שם מלא"
+              />
+            </div>
+
+            <div className="input-group">
+              <label>כתובת אימייל:</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                placeholder="כתובת אימייל תקינה"
+              />
+            </div>
+
+            <button type="submit" disabled={status === 'loading'}>
+              {status === 'loading' ? 'מעבד נתונים...' : 'הנפק אישור כניסה'}
+            </button>
+
+            {status === 'error' && (
+              <p className="error-message">שגיאת תקשורת עם השרת. ודא שהשרת ב-Render רץ.</p>
+            )}
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function VideoPage() {
-  const [showPrank, setShowPrank] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const audioRef = useRef(null);
 
-  const handleReveal = () => {
+  const handleStart = () => {
     setIsLoading(true);
-    // מפעיל את ההשהיה של ה-2 שניות לפי העיצוב של הכפתור שלך
+
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        audioRef.current.pause();
+      }).catch(err => console.log(err));
+    }
+
     setTimeout(() => {
-      setShowPrank(true);
+      window.alert("תל אביב צהובה\nתשתחוו יבני *****");
+
+      setHasStarted(true);
+
+      if (audioRef.current) {
+        audioRef.current.volume = 0.5;
+        audioRef.current.currentTime = 174;
+        audioRef.current.play();
+      }
     }, 2000);
   };
 
   return (
     <div className="video-page-wrapper" dir="rtl">
-      
-      {/* תמונת רקע (אופציונלי - אם אין לך קובץ maccabi-bg.jpg תוכל למחוק את השורה הזו) */}
-      <img src="/maccabi-bg.jpg" alt="Background" className="background-image" />
-      <div className="video-overlay"></div>
 
-      {!showPrank ? (
+      {hasStarted && (
+        <>
+          <img src="/bg-image.jpg" alt="Background" className="background-image" />
+          <div className="video-overlay"></div>
+        </>
+      )}
+
+      <audio ref={audioRef} loop preload="auto">
+        <source src="/song.mp3" type="audio/mpeg" />
+      </audio>
+
+      {!hasStarted ? (
         <div className="start-screen">
-          <img src="/maccabi.png" alt="Maccabi Logo" className="video-logo" />
-          <h1>🔒 מסמך מאובטח</h1>
-          <p>האישור שלך הונפק בהצלחה. מערכת האבטחה דורשת אישור ידני לפתיחת הקובץ.</p>
-          <button 
-            onClick={handleReveal} 
+          <img src="/maccabi.png" alt="Maccabi" className="video-logo" />
+          <h1>הבקשה אושרה בהצלחה!</h1>
+          <p>האישור הונפק ונמצא במערכת. לחץ על הכפתור להצגת אישור הכניסה הרשמי שלך לתל אביב.</p>
+
+          <button
+            onClick={handleStart}
             className="start-button"
             disabled={isLoading}
           >
-            {isLoading ? 'פותח אישור...' : 'צפייה באישור הכניסה'}
+            {isLoading ? 'מאמת נתונים מול השרת...' : 'הצג אישור כניסה'}
           </button>
         </div>
       ) : (
-        <>
-          <div className="karaoke-container">
-            <h1 className="karaoke-text">תל אביב צהובה! 💛💙</h1>
-          </div>
-          
-          {/* מנגן את השיר ששמת בתיקיית public מבלי להציג את הנגן על המסך */}
-          <audio src="/maccabi-song.mp3" autoPlay loop style={{ display: 'none' }} />
-        </>
+        <div className="karaoke-container">
+          <h1 className="karaoke-text">
+            אני מכבי<br />מי אתם בכלל!
+          </h1>
+        </div>
       )}
+
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<FormPage />} />
+        <Route path="/video-page" element={<VideoPage />} />
+      </Routes>
+    </Router>
   );
 }
