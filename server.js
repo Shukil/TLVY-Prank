@@ -5,29 +5,22 @@ require('dotenv').config();
 
 const app = express();
 
-// הגדרת CORS חזקה למניעת שגיאות דפדפן
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// טיפול בבקשות OPTIONS (Preflight)
-app.options('*', cors());
+// פתרון פשוט ועובד ל-CORS - זה יפתור את הבעיה שהייתה לך בנטוורק
+app.use(cors());
 
 app.use(express.json());
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// נתיב לבדיקה שהשרת חי (תבדוק אותו בדפדפן!)
+// נתיב בדיקה פשוט
 app.get('/', (req, res) => {
-    res.send('Maccabi Server is Running and Ready for Pranks!');
+    res.send('Maccabi Server is Live and Fixed!');
 });
 
 // הנתיב לשליחת המייל
 app.post('/send-email', async (req, res) => {
-    console.log('Received request:', req.body); // לוג כדי לראות ב-Render שהבקשה הגיעה
     const { email, fullName } = req.body;
+    console.log(`Sending email to: ${email}`);
 
     try {
         const data = await resend.emails.send({
@@ -49,12 +42,13 @@ app.post('/send-email', async (req, res) => {
 
         res.status(200).json({ success: true, data });
     } catch (error) {
-        console.error('Error sending email:', error);
+        console.error('Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
+// שימוש בפורט של Render
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is jumping on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
