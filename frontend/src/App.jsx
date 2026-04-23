@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-// --- קומפוננטת הטופס (דף הבית) ---
+// --- קומפוננטת הטופס (המראה הלוקאלי המקורי והפשוט) ---
 function FormPage() {
   const [formData, setFormData] = useState({ fullName: '', email: '' });
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ function FormPage() {
       });
       const data = await response.json();
       if (data.success) {
-        setMessage('הבקשה אושרה! בדוק את המייל שלך לאישור הרשמי.');
+        setMessage('הבקשה אושרה! האישור נשלח לכתובת המייל המבוקשת.');
         setFormData({ fullName: '', email: '' });
       } else {
         setMessage('השרת החזיר שגיאה. נסה שוב מאוחר יותר.');
@@ -32,15 +32,18 @@ function FormPage() {
   };
 
   return (
-    <div className="app-main" dir="rtl">
-      <div className="form-content">
-        <img src="/maccabi.png" alt="Logo" className="maccabi-logo" />
-        <h1 className="title">הנפקת אשרת כניסה לתל אביב</h1>
-        <p className="description">מערכת הרישום הרשמית של עיריית תל אביב-יפו.</p>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>שם מלא:</label>
+    <div dir="rtl" style={{ padding: '20px', fontFamily: 'Times New Roman, Arial, sans-serif' }}>
+      <div style={{ textAlign: 'right' }}>
+        <img src="/maccabi.png" alt="Maccabi Logo" style={{ width: '150px' }} />
+      </div>
+      
+      <h1 style={{ textAlign: 'center', fontSize: '32px', marginTop: '10px' }}>הנפקת אשרת כניסה לתל אביב</h1>
+      
+      <div style={{ textAlign: 'center', marginTop: '30px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'right' }}>
+          
+          <div style={{ marginBottom: '10px' }}>
+            <label style={{ fontWeight: 'bold' }}>שם מלא: </label>
             <input 
               type="text" 
               value={formData.fullName} 
@@ -48,8 +51,9 @@ function FormPage() {
               required 
             />
           </div>
-          <div className="input-group">
-            <label>כתובת אימייל:</label>
+          
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ fontWeight: 'bold' }}>כתובת אימייל (לשליחת האישור): </label>
             <input 
               type="email" 
               value={formData.email} 
@@ -57,13 +61,17 @@ function FormPage() {
               required 
             />
           </div>
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'מעבד...' : 'הנפק אישור כניסה'}
-          </button>
+          
+          <div style={{ textAlign: 'left' }}>
+            <button type="submit" disabled={loading} style={{ padding: '5px 15px', cursor: 'pointer' }}>
+              {loading ? 'מעבד...' : 'הנפק אישור כניסה'}
+            </button>
+          </div>
+          
         </form>
         
         {message && (
-          <p className={`status-message ${message.includes('בהצלחה') ? 'success' : 'error'}`}>
+          <p style={{ marginTop: '20px', color: message.includes('אושרה') ? 'green' : 'red', fontWeight: 'bold' }}>
             {message}
           </p>
         )}
@@ -72,11 +80,10 @@ function FormPage() {
   );
 }
 
-// --- קומפוננטת המתיחה (דף האישור) ---
+// --- קומפוננטת המתיחה (דף האישור - נשאר עם מסך האבטחה והשיר) ---
 function VideoPage() {
   const [showPrank, setShowPrank] = useState(false);
 
-  // המסך המזויף שלפני המתיחה (חובה כדי לאפשר ניגון אוטומטי של סאונד)
   if (!showPrank) {
     return (
       <div className="reveal-container" dir="rtl">
@@ -91,7 +98,6 @@ function VideoPage() {
     );
   }
 
-  // המסך של המתיחה האמיתית!
   return (
     <div className="prank-container">
       <div className="maccabi-overlay">
@@ -100,11 +106,9 @@ function VideoPage() {
         <h2>תל אביב צהובה! 💛💙</h2>
         <p>אין כניסה לעיר בלי חולצה צהובה.</p>
         
-        {/* נגן השמע של השיר שלך */}
         <div className="audio-wrapper" style={{ marginTop: '30px', background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '10px' }}>
           <h3 style={{ margin: '0 0 15px 0', color: '#ffcc00' }}>🔊 מדליק רמקולים...</h3>
-          {/* ודא שהשם פה תואם לשם הקובץ בתיקיית public */}
-          <audio src="/msong.mp3" autoPlay loop controls style={{ width: '100%', maxWidth: '400px' }} />
+          <audio src="/maccabi-song.mp3" autoPlay loop controls style={{ width: '100%', maxWidth: '400px' }} />
         </div>
       </div>
     </div>
