@@ -38,7 +38,7 @@ function FormPage() {
       <div className="container">
 
         <img src="/maccabi.png" alt="Maccabi" className="header-logo" />
-        <h1>הנפקת אשרת כניסה לתל אביב</h1>
+        <h1>הנפקת ויזת תייר לתל אביב</h1>
         <p className="subtitle">מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
 
         {status === 'success' ? (
@@ -47,7 +47,7 @@ function FormPage() {
               <span className="check-icon">✓</span>
               <h3>הבקשה התקבלה בהצלחה!</h3>
             </div>
-            <p className="success-text">אישור יישלח אליך למייל בקרוב.</p>
+            <p className="success-text">הבקשה בבחינת דור פרץ-ראש העיר שלך</p>
             <button onClick={() => setStatus('idle')}>שלח בקשה נוספת</button>
           </div>
         ) : (
@@ -104,7 +104,7 @@ function VideoPage() {
     }
 
     setTimeout(() => {
-      window.alert("תל אביב צהובה\nתשתחוו יבני *****");
+      window.alert("תל אביב צהובה\nתשתחוו יבני זונות");
 
       setHasStarted(true);
 
@@ -134,7 +134,7 @@ function VideoPage() {
         <div className="start-screen">
           <img src="/maccabi.png" alt="Maccabi" className="video-logo" />
           <h1>הבקשה אושרה בהצלחה!</h1>
-          <p>האישור הונפק ונמצא במערכת. לחץ על הכפתור להצגת אישור הכניסה הרשמי שלך לתל אביב.</p>
+          <p>ראש העיר דור פרץ אישר את הבקשה. לחץ על הכפתור להצגת אישור הכניסה הרשמי שלך לתל אביב.</p>
 
           <button
             onClick={handleStart}
