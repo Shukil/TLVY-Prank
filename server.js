@@ -31,7 +31,7 @@ app.post('/send-email', async (req, res) => {
                     
                     <h1 style="color: #00163f; font-size: 24px;">שלום ${fullName},</h1>
                     
-                    <p style="font-size: 18px; color: #333;">אנו שמחים לבשר לך שבקשת אשרת הכניסה שלך לתל אביב אושרה במערכת.</p>
+                    <p style="font-size: 18px; color: #333;">אנו שמחים לבשר לך שראש העיר אישר את ויזת התייר שלך .</p>
                     <p style="font-weight: bold; font-size: 16px;">כדי להוריד את האישור הרשמי לטלפון, לחץ על הכפתור למטה:</p>
                     <br />
                     
