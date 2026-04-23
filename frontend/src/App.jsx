@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [formData, setFormData] = useState({ 
-    name: '', 
-    email: '', 
-    reason: '', 
-    arrivalDate: '' 
-  });
-  const [status, setStatus] = useState('idle');
+  const [formData, setFormData] = useState({ fullName: '', email: '' });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('loading');
+    setLoading(true);
+    setMessage('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/submit-form', {
+      // שים לב: כאן החלפתי את localhost בכתובת של Render שלך!
+      // ודא שזו הכתובת המדויקת שמופיעה לך ב-Render Dashboard
+      const response = await fetch('https://tlvy-backend.onrender.com/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,99 +26,58 @@ function App() {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        setStatus('success');
-        setFormData({ name: '', email: '', reason: '', arrivalDate: '' }); 
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage('הבקשה נשלחה בהצלחה! בדוק את תיבת המייל שלך (וגם בספאם) לאישור הרשמי.');
+        setFormData({ fullName: '', email: '' }); // איפוס הטופס
       } else {
-        setStatus('error');
+        setMessage('אירעה שגיאה בשליחת הבקשה. נסה שוב מאוחר יותר.');
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setStatus('error');
+      console.error('Error:', error);
+      setMessage('שגיאת תקשורת עם השרת. ודא שהשרת ב-Render רץ.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="main-wrapper" dir="rtl">
-      <div className="container">
+    <div className="app-container" dir="rtl">
+      <div className="form-card">
+        <img src="/maccabi.png" alt="Maccabi Logo" className="logo" />
+        <h1>הנפקת אשרת כניסה לתל אביב</h1>
+        <p>מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
         
-        {/* אזור הכותרת עם הלוגואים */}
-        <div className="header-container">
-          {/* הלוגו העגול - יופיע בימין כי אנחנו ב-RTL */}
-          <img src="/maccabi.png" alt="Maccabi" className="header-logo" />
-          
-          <h1>בקשת אשרת תייר בכניסה לתל אביב יפו</h1>
-          
-          {/* הלוגו של הפנאטיקס - יופיע בשמאל */}
-          <img src="/fanatics.png" alt="Fanatics" className="header-logo" />
-        </div>
-        
-        {status === 'success' ? (
-          <div className="success-message">
-            <h3>✅ הבקשה התקבלה בהצלחה!</h3>
-            <p>תשובה תתקבל בקרוב</p>
-            <button onClick={() => setStatus('idle')}>שלח בקשה נוספת</button>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>שם מלא:</label>
+            <input 
+              type="text" 
+              name="fullName" 
+              value={formData.fullName} 
+              onChange={handleChange} 
+              required 
+              placeholder="הכנס שם מלא"
+            />
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="form-container">
-            
-            <div className="input-group">
-              <label>1. שם מלא:</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                placeholder="הכנס שם מלא"
-              />
-            </div>
-            
-            <div className="input-group">
-              <label>2. כתובת מייל:</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                placeholder="כתובת אימייל תקינה"
-              />
-            </div>
-
-            <div className="input-group">
-              <label>3. סיבת הבקשה:</label>
-              <select 
-                value={formData.reason} 
-                onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                required
-              >
-                <option value="" disabled>בחר סיבה מתוך הרשימה...</option>
-                <option value="tourism">תיירות ונופש</option>
-                <option value="business">עסקים ופגישות</option>
-                <option value="family">ביקור משפחה / חברים</option>
-                <option value="medical">טיפול רפואי</option>
-                <option value="other">אחר</option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>4. תאריך הגעה צפוי:</label>
-              <input
-                type="date"
-                value={formData.arrivalDate}
-                onChange={(e) => setFormData({ ...formData, arrivalDate: e.target.value })}
-                required
-              />
-            </div>
-
-            <button type="submit" disabled={status === 'loading'}>
-              {status === 'loading' ? 'מעבד נתונים...' : 'שלח בקשה לאשרה'}
-            </button>
-            
-            {status === 'error' && (
-              <p className="error-message">אופס! משהו השתבש. נסה שוב מאוחר יותר.</p>
-            )}
-          </form>
-        )}
+          <div className="input-group">
+            <label>כתובת אימייל:</label>
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              required 
+              placeholder="example@gmail.com"
+            />
+          </div>
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? 'מעבד בקשה במערכת...' : 'הנפק אישור כניסה'}
+          </button>
+        </form>
+        
+        {message && <p className={`status-message ${message.includes('בהצלחה') ? 'success' : 'error'}`}>{message}</p>}
       </div>
     </div>
   );
