@@ -18,16 +18,16 @@ app.get('/', (req, res) => {
 // נתיב שליחת המייל
 app.post('/send-email', async (req, res) => {
     const { email, fullName } = req.body;
-    
+
     console.log(`ניסיון שליחת מייל ל- ${email} עבור ${fullName}`);
 
     try {
         const data = await resend.emails.send({
-from: 'עיריית תל אביב-יפו <visa@dormayor.com>',            to: email,
+            from: 'עיריית תל אביב-יפו <visa@dormayor.com>', to: email,
             subject: 'אישור כניסה רשמי לתל אביב - הונפק בהצלחה',
             html: `
                 <div dir="rtl" style="font-family: Arial, sans-serif; border: 4px solid #ffcc00; padding: 30px; text-align: center; background-color: #ffffff; max-width: 600px; margin: auto;">
-                    <img src="https://upload.wikimedia.org/wikipedia/he/thumb/a/a8/Maccabi_Tel_Aviv_FC.svg/1024px-Maccabi_Tel_Aviv_FC.svg.png" alt="Maccabi Logo" style="width: 100px; margin-bottom: 20px;">
+                    <img src="https://tlvy-prank.vercel.app/maccabi.png" alt="Maccabi Logo" style="width: 100px; margin-bottom: 20px;">
                     
                     <h1 style="color: #00163f; font-size: 24px;">שלום ${fullName},</h1>
                     
