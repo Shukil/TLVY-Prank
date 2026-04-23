@@ -5,24 +5,33 @@ require('dotenv').config();
 
 const app = express();
 
-// הגדרת ה-API Key של Resend (יילקח מ-Render Environment Variables בענן)
-const resend = new Resend(process.env.RESEND_API_KEY);
+// הגדרת CORS חזקה למניעת שגיאות דפדפן
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(cors());
+// טיפול בבקשות OPTIONS (Preflight)
+app.options('*', cors());
+
 app.use(express.json());
 
-// נתיב לבדיקה שהשרת חי
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// נתיב לבדיקה שהשרת חי (תבדוק אותו בדפדפן!)
 app.get('/', (req, res) => {
-    res.send('Maccabi Server is Running!');
+    res.send('Maccabi Server is Running and Ready for Pranks!');
 });
 
 // הנתיב לשליחת המייל
 app.post('/send-email', async (req, res) => {
+    console.log('Received request:', req.body); // לוג כדי לראות ב-Render שהבקשה הגיעה
     const { email, fullName } = req.body;
 
     try {
         const data = await resend.emails.send({
-            from: 'Maccabi TLV <onboarding@resend.dev>', // שים לב: בגרסה החינמית זה תמיד נשלח מהכתובת הזו
+            from: 'Maccabi TLV <onboarding@resend.dev>',
             to: email,
             subject: 'אישור כניסה רשמי לתל אביב - הונפק בהצלחה',
             html: `
@@ -30,11 +39,10 @@ app.post('/send-email', async (req, res) => {
                     <h1 style="color: #00163f;">שלום ${fullName},</h1>
                     <p style="font-size: 1.2rem;">אנו שמחים לבשר לך שבקשת הויזה שלך לתל אביב אושרה במערכת.</p>
                     <p>כדי לצפות באישור הרשמי ולהוריד אותו לטלפון, לחץ על הקישור הבא:</p>
-                    <a href="https://YOUR-FRONTEND-URL.vercel.app/video-page" 
+                    <a href="https://tlvy-prank.vercel.app/video-page" 
                        style="background-color: #ffcc00; color: #00163f; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 5px;">
                        צפייה באישור הכניסה
                     </a>
-                    <p style="margin-top: 20px; font-size: 0.8rem; color: #666;">* תוקף האישור ל-72 שעות בלבד.</p>
                 </div>
             `
         });
@@ -46,10 +54,7 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-// הגדרת הפורט בצורה שמתאימה ל-Render
 const PORT = process.env.PORT || 5000;
-
-// האזנה לפורט בכתובת 0.0.0.0 - קריטי להצלחה ב-Render!
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Maccabi Server is jumping on port ${PORT}`);
+    console.log(`Server is jumping on port ${PORT}`);
 });

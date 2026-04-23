@@ -16,9 +16,8 @@ function App() {
     setMessage('');
 
     try {
-      // שים לב: כאן החלפתי את localhost בכתובת של Render שלך!
-      // ודא שזו הכתובת המדויקת שמופיעה לך ב-Render Dashboard
-      const response = await fetch('https://tlvy-backend.onrender.com/send-email', {
+      // *** שים לב: תחליף את הקישור למטה לקישור ה-RENDER שלך ***
+      const response = await fetch('https://YOUR-SERVICE-NAME.onrender.com/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,17 +25,21 @@ function App() {
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+
       const data = await response.json();
 
       if (data.success) {
-        setMessage('הבקשה נשלחה בהצלחה! בדוק את תיבת המייל שלך (וגם בספאם) לאישור הרשמי.');
-        setFormData({ fullName: '', email: '' }); // איפוס הטופס
+        setMessage('הבקשה נשלחה בהצלחה! האישור יישלח למייל שלך תוך דקות.');
+        setFormData({ fullName: '', email: '' });
       } else {
-        setMessage('אירעה שגיאה בשליחת הבקשה. נסה שוב מאוחר יותר.');
+        setMessage('השרת החזיר שגיאה. נסה שוב.');
       }
     } catch (error) {
       console.error('Error:', error);
-      setMessage('שגיאת תקשורת עם השרת. ודא שהשרת ב-Render רץ.');
+      setMessage('שגיאת תקשורת. ודא שהשרת ב-Render עובד (סטטוס LIVE).');
     } finally {
       setLoading(false);
     }
@@ -47,7 +50,7 @@ function App() {
       <div className="form-card">
         <img src="/maccabi.png" alt="Maccabi Logo" className="logo" />
         <h1>הנפקת אשרת כניסה לתל אביב</h1>
-        <p>מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
+        <p>מערכת הרישום הרשמית. האישור יישלח לכתובת המייל המצורפת.</p>
         
         <form onSubmit={handleSubmit}>
           <div className="input-group">
@@ -73,11 +76,15 @@ function App() {
             />
           </div>
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'מעבד בקשה במערכת...' : 'הנפק אישור כניסה'}
+            {loading ? 'מעבד...' : 'הנפק אישור כניסה'}
           </button>
         </form>
         
-        {message && <p className={`status-message ${message.includes('בהצלחה') ? 'success' : 'error'}`}>{message}</p>}
+        {message && (
+          <p className={`status-message ${message.includes('בהצלחה') ? 'success' : 'error'}`}>
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );
