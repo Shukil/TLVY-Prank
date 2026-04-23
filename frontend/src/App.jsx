@@ -17,8 +17,8 @@ function App() {
 
     try {
       // *** שים לב: תחליף את הקישור למטה לקישור ה-RENDER שלך ***
-      const response = await fetch('https://YOUR-SERVICE-NAME.onrender.com/send-email', {
-        method: 'POST',
+// שים לב לתוספת של ה-1 בשם השירות!
+const response = await fetch('https://tlvy-prank-1.onrender.com/send-email', {        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
