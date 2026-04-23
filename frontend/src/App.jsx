@@ -12,7 +12,6 @@ function FormPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      // ודא שהקישור למטה הוא הקישור ה-RENDER שלך
       const response = await fetch('https://tlvy-prank-1.onrender.com/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -21,12 +20,11 @@ function FormPage() {
       const data = await response.json();
       if (data.success) {
         setMessage('הבקשה אושרה! בדוק את המייל שלך לאישור הרשמי.');
-        setFormData({ fullName: '', email: '' }); // איפוס הטופס
+        setFormData({ fullName: '', email: '' });
       } else {
         setMessage('השרת החזיר שגיאה. נסה שוב מאוחר יותר.');
       }
     } catch (error) {
-      console.error('Error:', error);
       setMessage('שגיאה בתקשורת עם השרת.');
     } finally {
       setLoading(false);
@@ -36,7 +34,7 @@ function FormPage() {
   return (
     <div className="app-main" dir="rtl">
       <div className="form-content">
-        <img src="/maccabi.png" alt="Maccabi Logo" className="maccabi-logo" />
+        <img src="/maccabi.png" alt="Logo" className="maccabi-logo" />
         <h1 className="title">הנפקת אשרת כניסה לתל אביב</h1>
         <p className="description">מערכת הרישום הרשמית של עיריית תל אביב-יפו.</p>
         
@@ -48,7 +46,6 @@ function FormPage() {
               value={formData.fullName} 
               onChange={(e) => setFormData({...formData, fullName: e.target.value})} 
               required 
-              placeholder="ישראל ישראלי"
             />
           </div>
           <div className="input-group">
@@ -58,7 +55,6 @@ function FormPage() {
               value={formData.email} 
               onChange={(e) => setFormData({...formData, email: e.target.value})} 
               required 
-              placeholder="example@gmail.com"
             />
           </div>
           <button type="submit" className="submit-btn" disabled={loading}>
@@ -78,23 +74,43 @@ function FormPage() {
 
 // --- קומפוננטת המתיחה (דף האישור) ---
 function VideoPage() {
+  const [showPrank, setShowPrank] = useState(false);
+
+  // המסך המזויף שלפני המתיחה (חובה כדי לאפשר ניגון אוטומטי של סאונד)
+  if (!showPrank) {
+    return (
+      <div className="reveal-container" dir="rtl">
+        <div className="reveal-card">
+          <h2 style={{color: '#d9534f'}}>🔒 מסמך מאובטח</h2>
+          <p>האישור שלך הונפק בהצלחה. מערכת האבטחה דורשת אישור ידני לפתיחת הקובץ.</p>
+          <button onClick={() => setShowPrank(true)} className="reveal-btn">
+            לחץ כאן להצגת אישור הכניסה
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // המסך של המתיחה האמיתית!
   return (
     <div className="prank-container">
       <div className="maccabi-overlay">
+        <img src="/maccabi.png" alt="Maccabi Logo" className="maccabi-logo-large" />
         <h1>חחחח נראה לך?!</h1>
         <h2>תל אביב צהובה! 💛💙</h2>
-        <div className="maccabi-colors"></div>
+        <p>אין כניסה לעיר בלי חולצה צהובה.</p>
+        
+        {/* נגן השמע של השיר שלך */}
+        <div className="audio-wrapper" style={{ marginTop: '30px', background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '10px' }}>
+          <h3 style={{ margin: '0 0 15px 0', color: '#ffcc00' }}>🔊 מדליק רמקולים...</h3>
+          {/* ודא שהשם פה תואם לשם הקובץ בתיקיית public */}
+          <audio src="/msong.mp3" autoPlay loop controls style={{ width: '100%', maxWidth: '400px' }} />
+        </div>
       </div>
-      <iframe 
-        width="0" height="0" 
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
-        frameBorder="0" allow="autoplay">
-      </iframe>
     </div>
   );
 }
 
-// --- הקומפוננטה הראשית עם הניתוב ---
 export default function App() {
   return (
     <Router>
