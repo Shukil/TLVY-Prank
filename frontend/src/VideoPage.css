@@ -1,4 +1,8 @@
-/* העטיפה הראשית - מבטלת את השוליים של Vite ומתפרסת על כל המסך */
+/* =========================================
+   עיצוב דף המתיחה (Video Page)
+   ========================================= */
+
+/* העטיפה הראשית - מתפרסת על כל המסך ולא פוגעת בטופס */
 .video-page-wrapper {
   position: fixed;
   top: 0;
@@ -17,14 +21,14 @@
   z-index: 1000;
 }
 
-/* תמונת הרקע של המתיחה - נמתחת על כל המסך ללא רווחים */
+/* תמונת הרקע של המתיחה */
 .background-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* שומר על יחס התמונה וממלא את המסך */
+  object-fit: cover;
   z-index: 1;
 }
 
@@ -54,7 +58,7 @@
   align-items: center;
   text-align: center;
   max-width: 500px;
-  width: 90%; /* גמישות למסכים קטנים */
+  width: 90%;
   color: white;
   backdrop-filter: blur(10px);
   animation: fadeIn 0.5s ease;
@@ -119,13 +123,12 @@
 }
 
 .karaoke-text {
-  font-size: 10vw; /* גודל ענק שמתאים את עצמו למסך */
+  font-size: 10vw;
   color: #ffcc00;
   font-weight: 900;
   text-align: center;
   line-height: 1.1;
   margin: 0;
-  /* אפקט מסגרת כהה סביב האותיות */
   text-shadow: 
     -3px -3px 0 #00163f,  
      3px -3px 0 #00163f,
