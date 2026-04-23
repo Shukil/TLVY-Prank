@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-// --- דף הטופס ---
+// --- דף הבית (הטופס) ---
 function FormPage() {
   const [formData, setFormData] = useState({ fullName: '', email: '' });
   const [loading, setLoading] = useState(false);
@@ -32,35 +32,57 @@ function FormPage() {
   return (
     <div className="app-container" dir="rtl">
       <div className="form-card">
-        <img src="/maccabi.png" alt="Logo" className="logo" />
+        <div className="logo-placeholder">🏙️</div>
         <h1>הנפקת אשרת כניסה לתל אביב</h1>
+        <p className="subtitle">מערכת רישום תושבי חוץ - עיריית תל אביב-יפו</p>
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>שם מלא:</label>
-            <input type="text" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} required />
-          </div>
-          <div className="input-group">
-            <label>מייל למשלוח האישור:</label>
-            <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
-          </div>
+          <input type="text" placeholder="שם מלא" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} required />
+          <input type="email" placeholder="כתובת אימייל" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
           <button type="submit" className="submit-btn" disabled={loading}>{loading ? 'מעבד...' : 'הנפק אישור כניסה'}</button>
         </form>
-        {message && <p className="status-message success">{message}</p>}
+        {message && <p className="status-message">{message}</p>}
       </div>
     </div>
   );
 }
 
-// --- דף המתיחה ---
+// --- דף המתיחה המשופר ---
 function VideoPage() {
+  const [isPrankActive, setIsPrankActive] = useState(false);
+
   return (
-    <div className="prank-container" style={{textAlign: 'center', padding: '50px', backgroundColor: '#00163f', color: '#ffcc00', height: '100vh'}}>
-      <h1>חחחח נראה לך?! 😂</h1>
-      <h2>תל אביב צהובה! 💛💙</h2>
-      <div style={{marginTop: '30px'}}>
-        <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
-      </div>
-      <h3 style={{marginTop: '20px'}}>יאללה מכבי!</h3>
+    <div className={`prank-page ${isPrankActive ? 'party-mode' : 'official-mode'}`} dir="rtl">
+      {!isPrankActive ? (
+        <div className="official-check-card">
+          <div className="check-icon">✔️</div>
+          <h1>אישור הכניסה הונפק!</h1>
+          <p>מספר אישור: {Math.floor(Math.random() * 900000 + 100000)}</p>
+          <div className="details-box">
+            <p><strong>סטטוס:</strong> מאושר</p>
+            <p><strong>תוקף:</strong> 72 שעות</p>
+          </div>
+          <button className="download-btn" onClick={() => setIsPrankActive(true)}>
+             להורדת האישור (PDF) לחץ כאן
+          </button>
+        </div>
+      ) : (
+        <div className="maccabi-madness">
+          <h1 className="flash-text">חחחח נראה לך?! 😂</h1>
+          <h2 className="flash-text-blue">תל אביב צהובה! 💛💙</h2>
+          <div className="video-wrapper">
+            <iframe 
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0" 
+              title="Maccabi"
+              frameBorder="0" 
+              allow="autoplay; encrypted-media" 
+              allowFullScreen>
+            </iframe>
+          </div>
+          <div className="scrolling-text">
+            <span>יאללה מכבי! יאללה מכבי! יאללה מכבי!</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
