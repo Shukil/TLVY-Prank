@@ -5,62 +5,72 @@ require('dotenv').config();
 
 const app = express();
 
-// הגדרת CORS - מאפשר ל-Vercel לגשת לשרת ללא חסימות
+// הגדרת CORS פשוטה שתאפשר לאתר שלך ב-Vercel לדבר עם השרת
 app.use(cors());
 app.use(express.json());
 
-// אתחול Resend (ה-API Key חייב להיות מוגדר ב-Render תחת Environment Variables)
+// אתחול Resend עם ה-API Key מהסביבה ב-Render
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// --- נתיבי השרת ---
+// --- נתיבי השרת (Routes) ---
 
-// 1. נתיב בדיקה (Health Check) - תבדוק אותו בדפדפן כדי לוודא שהשרת Live
+// 1. נתיב בדיקה - זה מה שתראה כשתכתוב את כתובת השרת בדפדפן
 app.get('/', (req, res) => {
-    res.status(200).send(`
-        <div dir="rtl" style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-            <h1 style="color: #00163f;">השרת של שוקי באוויר! 🚀</h1>
-            <p style="color: #ffcc00; font-size: 1.5rem; font-weight: bold;">Maccabi TLV Mode: ON</p>
-        </div>
-    `);
+    res.status(200).send('<h1>Maccabi Server is UP and RUNNING! 💛💙</h1><p>The backend is ready to send some prank emails.</p>');
 });
 
-// 2. נתיב שליחת המייל (הלב של המתיחה)
+// 2. נתיב שליחת המייל
 app.post('/send-email', async (req, res) => {
     const { email, fullName } = req.body;
     
-    console.log(`ניסיון שליחת מייל ל: ${email} עבור: ${fullName}`);
+    console.log(`ניסיון שליחת מייל ל- ${email} עבור ${fullName}`);
 
     try {
+        // שליחת המייל דרך Resend עם העיצוב המלא
         const data = await resend.emails.send({
-            from: 'עיריית תל אביב-יפו <onboarding@resend.dev>', // בגרסה החינמית זה נשאר כך
+            from: 'מערכת אשרות לתל אביב <onboarding@resend.dev>', // שולח בעברית (בגרסה החינמית חייב להישאר onboarding@resend.dev)
             to: email,
             subject: 'אישור כניסה רשמי לתל אביב - הונפק בהצלחה',
             html: `
-            <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-top: 10px solid #ffcc00;">
-                <div style="background-color: #00163f; color: white; padding: 20px; text-align: center;">
-                    <h1 style="margin: 0; font-size: 24px;">עיריית תל אביב-יפו</h1>
-                    <p style="margin: 5px 0 0 0; color: #ffcc00;">מחלקת אשרות כניסה ופיקוח עירוני</p>
-                </div>
-                <div style="padding: 30px; background-color: #ffffff; color: #333333; line-height: 1.6;">
-                    <h2 style="color: #00163f;">שלום ${fullName},</h2>
-                    <p>אנו שמחים לעדכן כי בקשתך לקבלת <strong>אשרת כניסה זמנית לעיר תל אביב</strong> אושרה במערכות העירייה.</p>
-                    <p>האישור תקף ל-72 שעות מרגע קבלת הודעה זו. עליך להציג את האישור הממוחשב במידה ותתבקש על ידי פקח עירוני או במחסומי הכניסה הנבחרים.</p>
-                    
-                    <div style="text-align: center; margin: 30px 0;">
-                        <p style="font-weight: bold;">להורדת האישור הרשמי בפורמט PDF לטלפון:</p>
-                        <a href="https://tlvy-prank.vercel.app/video-page" 
-                           style="background-color: #00163f; color: #ffcc00; padding: 15px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
-                           צפייה והורדת אישור הכניסה
-                        </a>
+            <!DOCTYPE html>
+            <html dir="rtl" lang="he">
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    /* סגנונות ספציפיים לגוגל - לא תמיד עובדים, עדיף inline-css */
+                    body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f1f1f1; }
+                    .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 10px solid #ffcc00; }
+                    .header { background-color: #00163f; color: #ffffff; padding: 30px; text-align: center; }
+                    .content { padding: 40px; color: #333333; line-height: 1.6; font-size: 16px; }
+                    .footer { background-color: #f9f9f9; padding: 20px; text-align: center; color: #888888; font-size: 12px; }
+                    .btn { display: inline-block; background-color: #ffcc00; color: #00163f; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; font-size: 18px; margin-top: 20px; }
+                    .btn:hover { background-color: #e6b800; }
+                    h1 { margin-top: 0; color: #ffffff; font-size: 28px; }
+                    p { margin-bottom: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>עיריית תל אביב-יפו</h1>
+                        <p style="color: #ffcc00;">מחלקת אשרות כניסה</p>
                     </div>
-                    
-                    <p style="font-size: 14px; color: #666;">* אין להעביר אישור זה לצד ג'.<br>* הכניסה לעיר מותנית בעמידה בתקנות העירייה.</p>
+                    <div class="content">
+                        <p>שלום <strong>${fullName}</strong>,</p>
+                        <p>אנו שמחים לבשר לך שבקשת הויזה שלך לתל אביב אושרה במערכת הממוחשבת.</p>
+                        <p>האשרה תקפה ל-72 שעות בלבד.</p>
+                        <p>על מנת לצפות באישור הרשמי ולהוריד אותו לטלפון, אנא לחץ על הכפתור למטה:</p>
+                        <div style="text-align: center;">
+                            <a href="https://tlvy-prank.vercel.app/video-page" class="btn">צפייה באישור הכניסה</a>
+                        </div>
+                        <p style="margin-top: 30px; color: #666666; font-size: 14px;">הודעה זו נשלחה אליך באופן אוטומטי.</p>
+                    </div>
+                    <div class="footer">
+                        <p>© עיריית תל אביב-יפו | רחוב אבן גבירול 69 | www.tel-aviv.gov.il</p>
+                    </div>
                 </div>
-                <div style="background-color: #f9f9f9; padding: 15px; text-align: center; font-size: 12px; color: #888; border-top: 1px solid #eeeeee;">
-                    <p>הודעה זו נשלחה באופן אוטומטי על ידי מערכת האשרות העירונית.<br>אין להשיב למייל זה.</p>
-                    <p>© 2026 עיריית תל אביב-יפו | אבן גבירול 69, תל אביב</p>
-                </div>
-            </div>
+            </body>
+            </html>
             `
         });
 
@@ -73,9 +83,10 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-// --- הפעלת השרת ---
+// --- הגדרת הפורט והרצת השרת ---
 const PORT = process.env.PORT || 5000;
 
+// האזנה בפורט הנכון ובכתובת 0.0.0.0 (חובה ב-Render)
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Maccabi Server is jumping on port ${PORT} 🚀`);
+    console.log(`Server is jumping on port ${PORT} 🚀`);
 });
