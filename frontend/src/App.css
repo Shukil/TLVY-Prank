@@ -1,97 +1,128 @@
-.video-page-wrapper {
-  position: relative;
+/* --- ביטול סגנונות ברירת המחדל של דפדפן וVite --- */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f1f1f1;
+}
+
+/* --- עיצוב ה-FormPage --- */
+.app-main {
+  background: linear-gradient(135deg, #00163f 0%, #002b7a 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  background-color: #f4f7f9;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
+.form-content {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-
-.video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 22, 63, 0.7); /* כחול מכבי שקוף */
-  z-index: 2;
-}
-
-.start-screen {
-  background: white;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   text-align: center;
-  max-width: 400px;
-  width: 90%;
-  z-index: 3;
+  border-top: 6px solid #ffcc00; /* פס צהוב למעלה */
 }
 
-.video-logo {
-  width: 100px;
-  margin-bottom: 20px;
+.maccabi-logo {
+  height: 80px;
+  margin-bottom: 1.5rem;
 }
 
-.start-screen h1 {
-  color: #2ecc71;
-  font-size: 24px;
+.title {
+  color: #00163f;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
 }
 
-.start-screen p {
-  color: #555;
-  margin: 20px 0;
-  font-size: 16px;
+.description {
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  margin-top: 0;
 }
 
-.start-button {
+.input-group {
+  text-align: right;
+  margin-bottom: 1.2rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #00163f;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.submit-btn {
   background-color: #00163f;
   color: #ffcc00;
-  padding: 15px 30px;
+  width: 100%;
+  padding: 14px;
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
+  border-radius: 4px;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
-  width: 100%;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
+  margin-top: 1rem;
 }
 
-.start-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+.submit-btn:hover {
+  background-color: #002b7a;
+  box-shadow: 0 5px 15px rgba(0, 22, 63, 0.3);
 }
 
-.karaoke-container {
-  position: relative;
-  z-index: 3;
+.status-message {
+  margin-top: 1.5rem;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.status-message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* --- עיצוב ה-VideoPage (דף המתיחה) --- */
+.prank-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+}
+
+.maccabi-overlay {
   text-align: center;
-  animation: flash 0.5s infinite alternate;
-}
-
-.karaoke-text {
-  font-size: 60px;
   color: #ffcc00;
-  text-shadow: 3px 3px 0 #00163f, -1px -1px 0 #00163f, 1px -1px 0 #00163f, -1px 1px 0 #00163f, 1px 1px 0 #00163f;
-  margin: 0;
-}
-
-@keyframes flash {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
-}
-
-@media (max-width: 480px) {
-  .karaoke-text { font-size: 40px; }
+  font-size: 3rem;
+  background: linear-gradient(to right, #00163f, #002b7a);
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 0 50px #ffcc00;
 }
