@@ -38,7 +38,7 @@ function FormPage() {
       <div className="container">
 
         <img src="/maccabi.png" alt="Maccabi" className="header-logo" />
-        <h1>הנפקת  יפו ויזת תייר לתל אביב</h1>
+        <h1>הנפקת ויזת תייר לתל אביב</h1>
         <p className="subtitle">מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
 
         {status === 'success' ? (
