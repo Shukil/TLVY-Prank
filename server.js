@@ -1,114 +1,55 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { Resend } = require('resend'); // ייבוא הספרייה
+const { Resend } = require('resend');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const resend = new Resend(process.env.RESEND_API_KEY); // חיבור למפתח שלנו
+
+// הגדרת ה-API Key של Resend (יילקח מ-Render Environment Variables בענן)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'OK', message: 'Server is running smoothly' });
+// נתיב לבדיקה שהשרת חי
+app.get('/', (req, res) => {
+    res.send('Maccabi Server is Running!');
 });
 
-app.post('/api/submit-form', async (req, res) => {
-    const { email, name } = req.body;
+// הנתיב לשליחת המייל
+app.post('/send-email', async (req, res) => {
+    const { email, fullName } = req.body;
 
-    if (!email) {
-        return res.status(400).json({ error: 'Email is required' });
+    try {
+        const data = await resend.emails.send({
+            from: 'Maccabi TLV <onboarding@resend.dev>', // שים לב: בגרסה החינמית זה תמיד נשלח מהכתובת הזו
+            to: email,
+            subject: 'אישור כניסה רשמי לתל אביב - הונפק בהצלחה',
+            html: `
+                <div dir="rtl" style="font-family: Arial, sans-serif; border: 2px solid #ffcc00; padding: 20px; text-align: center;">
+                    <h1 style="color: #00163f;">שלום ${fullName},</h1>
+                    <p style="font-size: 1.2rem;">אנו שמחים לבשר לך שבקשת הויזה שלך לתל אביב אושרה במערכת.</p>
+                    <p>כדי לצפות באישור הרשמי ולהוריד אותו לטלפון, לחץ על הקישור הבא:</p>
+                    <a href="https://YOUR-FRONTEND-URL.vercel.app/video-page" 
+                       style="background-color: #ffcc00; color: #00163f; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 5px;">
+                       צפייה באישור הכניסה
+                    </a>
+                    <p style="margin-top: 20px; font-size: 0.8rem; color: #666;">* תוקף האישור ל-72 שעות בלבד.</p>
+                </div>
+            `
+        });
+
+        res.status(200).json({ success: true, data });
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ success: false, error: error.message });
     }
-
-    const randomDelaySeconds = Math.floor(Math.random() * (10800 - 3600 + 1)) + 3600;
-
-    if (process.env.NODE_ENV === 'development') {
-        console.log(`[DEV MODE] Form received for ${email}. Mocking delay of 10 seconds...`);
-        
-        setTimeout(async () => {
-            console.log(`[DEV MODE] ⏳ Time's up! Sending real email to: ${email}`);
-            
-           try {
-                const data = await resend.emails.send({
-                    from: 'onboarding@resend.dev', 
-                    to: email,
-                    subject: 'עדכון סטטוס: בקשת אשרת תייר לתל אביב יפו', 
-                    html: `
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="margin: 0; padding: 0; background-color: #001122; font-family: Arial, Helvetica, sans-serif;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #001122;" dir="rtl">
-        <tr>
-            <td align="center" style="padding: 40px 10px;">
-                
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #00163f; max-width: 600px; width: 100%; border-top: 5px solid #ffcc00; border-bottom: 2px solid #ffcc00;">
-                    
-                    <tr>
-                        <td align="center" style="padding: 30px 20px; border-bottom: 1px solid #1a2a4f;">
-                            <h1 style="color: #ffcc00; margin: 0; font-size: 24px;">עדכון סטטוס בקשה</h1>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td align="right" style="padding: 40px 30px; color: #ffffff; line-height: 1.6;">
-                            <h2 style="color: #ffcc00; margin-top: 0; font-size: 20px;">שלום ${name},</h2>
-                            <p style="font-size: 16px; color: #e0e0e0; margin: 0 0 10px 0;">פנייתך לקבלת אשרת תייר בכניסה לתל אביב יפו התקבלה ונבדקה במערכת שלנו.</p>
-                            <p style="font-size: 16px; font-weight: bold; color: #ffffff; margin: 0 0 35px 0;">התשובה הסופית לגבי סטטוס הבקשה שלך ממתינה בקישור המצורף מטה.</p>
-                            
-                            <table border="0" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto;">
-                                <tr>
-                                    <td align="center" style="background-color: #ffcc00; border-radius: 4px;">
-                                        <a href="https://your-website.com/video-page" target="_blank" style="font-size: 18px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; color: #00163f; text-decoration: none; padding: 15px 35px; display: inline-block;">
-                                            לבדיקת זכאות לחץ כאן
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                            
-                            <p style="font-size: 14px; color: #aaaaaa; margin-top: 35px; margin-bottom: 0;">
-                                אם הכפתור אינו עובד, ניתן להעתיק ולהדביק את הקישור הבא בדפדפן:<br>
-                                <a href="https://your-website.com/video-page" style="color: #ffcc00; text-decoration: none; word-break: break-all;">https://your-website.com/video-page</a>
-                            </p>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td align="center" style="background-color: #000c24; padding: 20px; font-size: 13px; color: #666666; border-top: 1px solid #1a2a4f;">
-                            <p style="margin: 0;">הודעה זו נשלחה אוטומטית ממערכת אישורי הכניסה לתל אביב יפו.</p>
-                        </td>
-                    </tr>
-                    
-                </table>
-                
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
-                    `
-                });
-                console.log("✅ Email sent successfully!", data.id);
-            } catch (error) {
-                console.error("❌ Failed to send email:", error);
-            }
-        }, 10000); 
-
-    } else {
-        console.log(`[PROD MODE] Scheduling email for ${email} in ${randomDelaySeconds} seconds.`);
-        // כאן ישב הקוד של Google Cloud Tasks בעתיד
-    }
-
-    res.status(200).json({ 
-        message: 'Request received successfully! Email will be sent later.',
-        estimatedDelaySeconds: process.env.NODE_ENV === 'development' ? 10 : randomDelaySeconds
-    });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+// הגדרת הפורט בצורה שמתאימה ל-Render
+const PORT = process.env.PORT || 5000;
+
+// האזנה לפורט בכתובת 0.0.0.0 - קריטי להצלחה ב-Render!
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Maccabi Server is jumping on port ${PORT}`);
 });
