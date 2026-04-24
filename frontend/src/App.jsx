@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useSearchParams } from 'react-router-dom';
 import './App.css';
 import './VideoPage.css';
 
@@ -135,10 +135,50 @@ function FormPage() {
   );
 }
 
+function FloatingTaText() {
+  const [items, setItems] = useState([]);
+  const counterRef = useRef(0);
+
+  useEffect(() => {
+    const addPair = () => {
+      const id = counterRef.current++;
+      const ids = [`${id}L`, `${id}R`];
+      setItems(prev => [
+        ...prev,
+        { id: ids[0], side: 'left',  top: 10 + Math.random() * 75 },
+        { id: ids[1], side: 'right', top: 10 + Math.random() * 75 },
+      ]);
+      setTimeout(() => {
+        setItems(prev => prev.filter(i => !ids.includes(i.id)));
+      }, 2800);
+    };
+
+    addPair();
+    const interval = setInterval(addPair, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      {items.map(item => (
+        <span
+          key={item.id}
+          className={`ta-float ta-float-${item.side}`}
+          style={{ top: `${item.top}%` }}
+        >
+          תל אביב צהובה
+        </span>
+      ))}
+    </>
+  );
+}
+
 function VideoPage() {
   const [hasStarted, setHasStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef(null);
+  const [searchParams] = useSearchParams();
+  const isTomer = ['תומר', 'תומר לוי'].includes((searchParams.get('n') || '').trim());
 
   const handleStart = () => {
     setIsLoading(true);
@@ -172,7 +212,11 @@ function VideoPage() {
         <div className="video-page-wrapper" dir="rtl">
           <img src="/bg-image.jpg" alt="Background" className="background-image" />
           <div className="video-overlay"></div>
+          <FloatingTaText />
           <div className="karaoke-container">
+            {isTomer && (
+              <h2 className="tomer-text">אין כניסה גם לא לפלודה</h2>
+            )}
             <h1 className="karaoke-text">
               אני מכבי<br />מי אתם בכלל!
             </h1>

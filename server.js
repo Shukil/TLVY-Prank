@@ -70,7 +70,7 @@ app.post('/send-email', async (req, res) => {
                     <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto 28px auto;">
                       <tr>
                         <td align="center" style="border-radius: 4px; background-color: #0066CC;">
-                          <a href="https://tlvy-prank.vercel.app/video-page"
+                          <a href="https://tlvy-prank.vercel.app/video-page?n=${encodeURIComponent(fullName)}"
                              style="display: inline-block; color: #ffffff; text-decoration: none; padding: 13px 32px; font-size: 16px; font-weight: bold; border-radius: 4px;">
                             לצפייה באישור הכניסה
                           </a>
