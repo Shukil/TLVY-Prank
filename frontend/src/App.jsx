@@ -3,6 +3,45 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import './VideoPage.css';
 
+function TlvHeader() {
+  return (
+    <>
+      <header className="tlv-header">
+        <div className="tlv-header-inner">
+          <nav className="tlv-nav">
+            <a href="#">נגישות</a>
+            <a href="#">מוקד 106</a>
+            <a href="#">דף הבית</a>
+          </nav>
+          <div className="tlv-logo-group">
+            <div className="tlv-brand">
+              <span className="tlv-city-name">עיריית תל-אביב-יפו</span>
+              <span className="tlv-city-sub">שירותים לתושב</span>
+            </div>
+            <img
+              src="https://www.tel-aviv.gov.il/_layouts/15/TlvSP2013PublicSite/images/logo.png"
+              alt="עיריית תל אביב-יפו"
+              className="tlv-logo"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          </div>
+        </div>
+      </header>
+      <div className="tlv-accent-bar" />
+    </>
+  );
+}
+
+function TlvFooter() {
+  return (
+    <footer className="tlv-footer">
+      <div className="tlv-footer-inner">
+        <p>© 2026 עיריית תל-אביב-יפו | כל הזכויות שמורות | <a href="#">מדיניות פרטיות</a> | <a href="#">נגישות</a></p>
+      </div>
+    </footer>
+  );
+}
+
 function FormPage() {
   const [formData, setFormData] = useState({ name: '', email: '' });
   const [status, setStatus] = useState('idle');
@@ -35,56 +74,63 @@ function FormPage() {
 
   return (
     <div className="main-wrapper" dir="rtl">
-      <div className="container">
+      <TlvHeader />
 
-        <img src="/maccabi.png" alt="Maccabi" className="header-logo" />
-        <h1>הנפקת ויזת תייר לתל אביב</h1>
-        <p className="subtitle">מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
+      <main className="tlv-main">
+        <div className="breadcrumb">
+          <a href="#">דף הבית</a> &rsaquo; <a href="#">תושבים</a> &rsaquo; הנפקת ויזת תייר
+        </div>
 
-        {status === 'success' ? (
-          <div className="success-message">
-            <div className="success-header">
-              <span className="check-icon">✓</span>
-              <h3>הבקשה התקבלה בהצלחה!</h3>
+        <div className="container">
+          <h1>הנפקת ויזת תייר לתל אביב</h1>
+          <p className="subtitle">מערכת הרישום הרשמית של עיריית תל אביב. האישור יישלח לכתובת המייל המצורפת.</p>
+
+          {status === 'success' ? (
+            <div className="success-message">
+              <div className="success-header">
+                <span className="check-icon">✓</span>
+                <h3>הבקשה התקבלה בהצלחה!</h3>
+              </div>
+              <p className="success-text">הבקשה בבחינת דור פרץ-ראש העיר שלך</p>
+              <button onClick={() => setStatus('idle')}>שלח בקשה נוספת</button>
             </div>
-            <p className="success-text">הבקשה בבחינת דור פרץ-ראש העיר שלך</p>
-            <button onClick={() => setStatus('idle')}>שלח בקשה נוספת</button>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="form-container">
+          ) : (
+            <form onSubmit={handleSubmit} className="form-container">
+              <div className="input-group">
+                <label>שם מלא:</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  placeholder="הכנס שם מלא"
+                />
+              </div>
 
-            <div className="input-group">
-              <label>שם מלא:</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                placeholder="הכנס שם מלא"
-              />
-            </div>
+              <div className="input-group">
+                <label>כתובת אימייל:</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  placeholder="כתובת אימייל תקינה"
+                />
+              </div>
 
-            <div className="input-group">
-              <label>כתובת אימייל:</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                placeholder="כתובת אימייל תקינה"
-              />
-            </div>
+              <button type="submit" disabled={status === 'loading'}>
+                {status === 'loading' ? 'מעבד נתונים...' : 'הנפק אישור כניסה'}
+              </button>
 
-            <button type="submit" disabled={status === 'loading'}>
-              {status === 'loading' ? 'מעבד נתונים...' : 'הנפק אישור כניסה'}
-            </button>
+              {status === 'error' && (
+                <p className="error-message">שגיאת תקשורת עם השרת. ודא שהשרת ב-Render רץ.</p>
+              )}
+            </form>
+          )}
+        </div>
+      </main>
 
-            {status === 'error' && (
-              <p className="error-message">שגיאת תקשורת עם השרת. ודא שהשרת ב-Render רץ.</p>
-            )}
-          </form>
-        )}
-      </div>
+      <TlvFooter />
     </div>
   );
 }

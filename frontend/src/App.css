@@ -5,48 +5,137 @@ html, body, #root {
   min-height: 100%;
 }
 
-/* --- טופס הרישום --- */
+/* --- Page layout --- */
 .main-wrapper {
-  background-color: #00163f;
+  background-color: #eef2f7;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  flex-direction: column;
+  font-family: Arial, 'Noto Sans Hebrew', Helvetica, sans-serif;
 }
 
+/* --- Header --- */
+.tlv-header {
+  background-color: #003D87;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.tlv-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tlv-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tlv-logo {
+  height: 54px;
+  display: block;
+}
+
+.tlv-brand {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.tlv-city-name {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.tlv-city-sub {
+  color: #a8c8f0;
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+.tlv-nav {
+  display: flex;
+  gap: 22px;
+  font-size: 0.88rem;
+}
+
+.tlv-nav a {
+  color: #c8ddf5;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.tlv-nav a:hover {
+  color: #ffffff;
+}
+
+/* --- Accent bar --- */
+.tlv-accent-bar {
+  background-color: #0066CC;
+  height: 3px;
+}
+
+/* --- Main content --- */
+.tlv-main {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Breadcrumb --- */
+.breadcrumb {
+  font-size: 0.83rem;
+  color: #666;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.breadcrumb a {
+  color: #0066CC;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* --- Container/Card --- */
 .container {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 40px 36px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-
-.header-logo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-bottom: 16px;
+  border: 1px solid #cdd8e8;
+  border-top: 4px solid #0066CC;
+  border-radius: 2px;
+  padding: 36px 32px;
+  max-width: 500px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
 .container h1 {
-  color: #00163f;
-  font-size: 1.6rem;
+  color: #003D87;
+  font-size: 1.55rem;
   font-weight: bold;
   margin: 0 0 10px 0;
 }
 
 .subtitle {
-  color: #666;
+  color: #555;
   font-size: 0.9rem;
-  margin: 0 0 24px 0;
-  line-height: 1.5;
+  margin: 0 0 22px 0;
+  line-height: 1.6;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eaeef4;
 }
 
+/* --- Form --- */
 .form-container {
   display: flex;
   flex-direction: column;
@@ -60,68 +149,73 @@ html, body, #root {
 }
 
 .input-group label {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: bold;
-  color: #222;
-  margin-bottom: 6px;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .input-group input,
 .input-group select {
-  padding: 12px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 10px 12px;
+  border: 1px solid #b8c8da;
+  border-radius: 3px;
+  font-size: 0.95rem;
   text-align: right;
   direction: rtl;
   outline: none;
-  transition: border-color 0.2s;
+  background-color: #fafbfc;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-group input:focus,
 .input-group select:focus {
-  border-color: #00163f;
+  border-color: #0066CC;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+  background-color: #fff;
 }
 
 .form-container button[type="submit"],
 .success-message button {
   width: 100%;
-  padding: 14px;
-  background-color: #00163f;
-  color: #ffcc00;
+  padding: 12px;
+  background-color: #0066CC;
+  color: #ffffff;
   border: none;
-  border-radius: 6px;
-  font-size: 1.1rem;
+  border-radius: 3px;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 4px;
-  transition: opacity 0.2s;
+  margin-top: 6px;
+  transition: background-color 0.18s;
+  letter-spacing: 0.3px;
 }
 
 .form-container button[type="submit"]:hover,
 .success-message button:hover {
-  opacity: 0.88;
+  background-color: #0052a8;
 }
 
 .form-container button[type="submit"]:disabled {
-  opacity: 0.6;
+  background-color: #7aaed6;
   cursor: not-allowed;
 }
 
 .error-message {
-  background-color: #ffcc00;
-  color: #00163f;
+  background-color: #fdf1f1;
+  color: #c0392b;
   padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-align: center;
+  border-radius: 3px;
+  border: 1px solid #f5c6c6;
+  font-size: 0.87rem;
+  text-align: right;
   margin: 0;
 }
 
-/* --- הצלחה --- */
+/* --- Success state --- */
 .success-message {
   text-align: center;
+  padding: 8px 0;
 }
 
 .success-header {
@@ -133,89 +227,46 @@ html, body, #root {
 }
 
 .check-icon {
-  color: #28a745;
+  color: #27ae60;
   font-size: 1.4rem;
   font-weight: bold;
 }
 
 .success-message h3 {
-  color: #00163f;
+  color: #003D87;
   margin: 0;
 }
 
 .success-text {
   color: #555;
   margin-bottom: 20px;
+  font-size: 0.9rem;
 }
 
-/* --- דף המסמך המאובטח --- */
-.reveal-container {
-  background-color: #f1f1f1;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+/* --- Footer --- */
+.tlv-footer {
+  background-color: #1c2d4a;
+  padding: 18px 24px;
 }
 
-.reveal-card {
-  background: white;
-  padding: 40px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  max-width: 400px;
-  border-top: 5px solid #d9534f;
-}
-
-.reveal-btn {
-  background-color: #00163f;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-.reveal-btn:hover {
-  background-color: #ffcc00;
-  color: #00163f;
-}
-
-/* --- דף המתיחה --- */
-.prank-container {
-  background-color: #00163f;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  color: white;
+.tlv-footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.maccabi-logo-large {
-  height: 150px;
-  margin-bottom: 10px;
-  animation: popIn 0.5s ease-out;
-}
-
-.maccabi-overlay h1 {
-  color: #ffcc00;
-  font-size: 3rem;
+.tlv-footer-inner p {
+  color: #8aa5c5;
+  font-size: 0.8rem;
   margin: 0;
 }
 
-.maccabi-overlay h2 {
-  font-size: 2rem;
-  margin: 10px 0;
+.tlv-footer-inner a {
+  color: #8aa5c5;
+  text-decoration: none;
 }
 
-@keyframes popIn {
-  0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+.tlv-footer-inner a:hover {
+  color: #ffffff;
+  text-decoration: underline;
 }
