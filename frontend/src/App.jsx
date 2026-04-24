@@ -91,7 +91,7 @@ function FormPage() {
                 <span className="check-icon">✓</span>
                 <h3>הבקשה התקבלה בהצלחה!</h3>
               </div>
-              <p className="success-text">הבקשה בבחינת דור פרץ-ראש העיר שלך</p>
+              <p className="success-text">בקשתך הועברה לבחינה</p>
               <button onClick={() => setStatus('idle')}>שלח בקשה נוספת</button>
             </div>
           ) : (
@@ -119,7 +119,7 @@ function FormPage() {
               </div>
 
               <button type="submit" disabled={status === 'loading'}>
-                {status === 'loading' ? 'מעבד נתונים...' : 'הנפק אישור כניסה'}
+                {status === 'loading' ? 'מעבד נתונים...' : 'לצפייה בסיבת הדחייה'}
               </button>
 
               {status === 'error' && (
@@ -179,15 +179,15 @@ function VideoPage() {
       {!hasStarted ? (
         <div className="start-screen">
           <img src="/maccabi.png" alt="Maccabi" className="video-logo" />
-          <h1>הבקשה אושרה בהצלחה!</h1>
-          <p>ראש העיר דור פרץ אישר את הבקשה. לחץ על הכפתור להצגת אישור הכניסה הרשמי שלך לתל אביב.</p>
+          <h1>  הבקשה נדתחתה</h1>
+          <p>בקשתך נדתחך ע"מ לצפות בסיבת הדחיה לחץ על הכפתור.</p>
 
           <button
             onClick={handleStart}
             className="start-button"
             disabled={isLoading}
           >
-            {isLoading ? 'מאמת נתונים מול השרת...' : 'הצג אישור כניסה'}
+            {isLoading ? 'מאמת נתונים מול השרת...' : 'לצפייה בסיבת הדחייה לחץ כאן'}
           </button>
         </div>
       ) : (
