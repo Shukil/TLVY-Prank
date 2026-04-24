@@ -97,13 +97,13 @@
 }
 
 .karaoke-container {
-  position: relative;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 5;
   text-align: center;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .tomer-text {
