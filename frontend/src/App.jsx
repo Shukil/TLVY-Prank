@@ -163,42 +163,48 @@ function VideoPage() {
   };
 
   return (
-    <div className="video-page-wrapper" dir="rtl">
-
-      {hasStarted && (
-        <>
-          <img src="/bg-image.jpg" alt="Background" className="background-image" />
-          <div className="video-overlay"></div>
-        </>
-      )}
-
+    <>
       <audio ref={audioRef} loop preload="auto">
         <source src="/song.mp3" type="audio/mpeg" />
       </audio>
 
-      {!hasStarted ? (
-        <div className="start-screen">
-          <img src="/maccabi.png" alt="Maccabi" className="video-logo" />
-          <h1>  הבקשה נדתחתה</h1>
-          <p>בקשתך נדתחך ע"מ לצפות בסיבת הדחיה לחץ על הכפתור.</p>
-
-          <button
-            onClick={handleStart}
-            className="start-button"
-            disabled={isLoading}
-          >
-            {isLoading ? 'מאמת נתונים מול השרת...' : 'לצפייה בסיבת הדחייה לחץ כאן'}
-          </button>
+      {hasStarted ? (
+        <div className="video-page-wrapper" dir="rtl">
+          <img src="/bg-image.jpg" alt="Background" className="background-image" />
+          <div className="video-overlay"></div>
+          <div className="karaoke-container">
+            <h1 className="karaoke-text">
+              אני מכבי<br />מי אתם בכלל!
+            </h1>
+          </div>
         </div>
       ) : (
-        <div className="karaoke-container">
-          <h1 className="karaoke-text">
-            אני מכבי<br />מי אתם בכלל!
-          </h1>
+        <div className="main-wrapper" dir="rtl">
+          <TlvHeader />
+          <main className="tlv-main">
+            <div className="breadcrumb">
+              <a href="/">דף הבית</a> &rsaquo; <a href="#">תושבים</a> &rsaquo; סטטוס בקשה
+            </div>
+            <div className="container">
+              <div className="rejection-notice">
+                <span className="rejection-icon">✗</span>
+                <span>הבקשה נדחתה</span>
+              </div>
+              <h1>תוצאת הבקשה</h1>
+              <p className="subtitle">בקשתך נבחנה ונדחתה. לצפייה בסיבת הדחייה, לחץ על הכפתור.</p>
+              <button
+                onClick={handleStart}
+                className="tlv-submit-btn"
+                disabled={isLoading}
+              >
+                {isLoading ? 'מאמת נתונים מול השרת...' : 'לצפייה בסיבת הדחייה לחץ כאן'}
+              </button>
+            </div>
+          </main>
+          <TlvFooter />
         </div>
       )}
-
-    </div>
+    </>
   );
 }
 
