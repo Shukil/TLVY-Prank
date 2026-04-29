@@ -119,7 +119,7 @@ function FormPage() {
               </div>
 
               <button type="submit" disabled={status === 'loading'}>
-                {status === 'loading' ? 'מעבד נתונים...' : 'הגשת הבקשה'}
+                {status === 'loading' ? 'מעבד נתונים...' : 'לצפייה בסיבת הדחייה'}
               </button>
 
               {status === 'error' && (
