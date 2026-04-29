@@ -119,7 +119,7 @@ function FormPage() {
               </div>
 
               <button type="submit" disabled={status === 'loading'}>
-                {status === 'loading' ? 'מעבד נתונים...' : 'לצפייה בסיבת הדחייה'}
+                {status === 'loading' ? 'מעבד נתונים...' : 'להגשת הבקשה'}
               </button>
 
               {status === 'error' && (
@@ -241,7 +241,7 @@ function VideoPage() {
                 className="tlv-submit-btn"
                 disabled={isLoading}
               >
-                {isLoading ? 'מאמת נתונים מול השרת...' : 'לצפייה בסיבת הדחייה לחץ כאן'}
+                {isLoading ? 'מאמת נתונים מול השרת...' : 'לצפייה בסיבת הדחייה'}
               </button>
             </div>
           </main>
